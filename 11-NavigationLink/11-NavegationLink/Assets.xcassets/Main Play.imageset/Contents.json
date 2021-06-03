@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "Jordan-Netflix-1280x720-1-1024x576 1.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "Jordan-Netflix-1280x720-1-1024x576 1@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "Jordan-Netflix-1280x720-1-1024x576 1@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
