@@ -28,8 +28,8 @@ struct ContentView: View {
         NavigationView{
             List {
                 ForEach(courses){ course in
-                    ZStack{
                     
+                    ZStack{
                         CourseRoundImageRow(course:course)
                             .contextMenu{
                                 Button(action: {
@@ -59,35 +59,49 @@ struct ContentView: View {
                                     }
                                 }
                         }
+                            
                         .onTapGesture {
+                            self.showActionSheet.toggle()
                             self.selectedCourse = course
                         }
-                        NavigationLink(destination: DetailView(course: course)){
-                            EmptyView()
-                        }
+                    
+                       
+                       //.actionSheet(item: self.$selectedCourse){ _ in
+                            .actionSheet(isPresented: self.$showActionSheet){
+                            ActionSheet(title: Text("Indica tu accion a realizar"),
+                                        
+                                        message: nil,
+                                        buttons: [
+                                            .default(Text("Agregar a favorito"), action: {
+                                                if let selectedCourse = self.selectedCourse{
+                                                    self.setFeatured(item: selectedCourse)
+                                                }
+                                            }),
+                                            
+                                            .default(Text("Comprar Curso"), action: {
+                                                if let selectedCourse = self.selectedCourse{
+                                                     self.setPurchased(item: selectedCourse)
+                                                }
+                                            }),
+                                    
+                                            .destructive(Text("Eliminar Curso"), action: {
+                                                if let selectedCourse =
+                                                    self.selectedCourse{
+                                                    self.delete(item: selectedCourse)
+                                                }
+                                            }),
+                                            .cancel()
+                                        ])
+                                }
+//                      NavigationLink(destination: DetailView(course: course)){
+//                          EmptyView()
+//                      }
                     }
                 }
-                .onDelete { (indexSet) in
-                    self.courses.remove(atOffsets: indexSet)
-                }
-                .actionSheet(isPresented: self.$showActionSheet){
-                    ActionSheet(title: Text("Indica tu action a realizar"),
-                                message: nil,
-                                buttons: [
-                                    .default(Text("Marcar como favorito"), action: {
-                                        if let selectedCourse = self.selectedCourse{
-                                            self.setFeatured(item: selectedCourse)
-                                        }
-                                    }),
-                                    .destructive(Text("Eliminar Curso"), action: {
-                                        if let selectedCourse =
-                                            self.selectedCourse{
-                                            self.delete(item: selectedCourse)
-                                        }
-                                    }),
-                                    .cancel()
-                    ])
-                }
+              .onDelete { (indexSet) in
+                   self.courses.remove(atOffsets: indexSet)
+               }
+                    
             }
             .navigationBarTitle("Cursos online de JB", displayMode: .automatic)
         }
@@ -100,13 +114,13 @@ struct ContentView: View {
         }
     }
     
+    
     private func setPurchased(item course: Course) {
         if let idx = self.courses.firstIndex(where: {$0.id == course.id}){
             self.courses[idx].purchased.toggle()
         }
-       
     }
-    
+
     private func delete(item course: Course){
         if let idx = self.courses.firstIndex(where: {$0.id == course.id}){
             self.courses.remove(at: idx)
@@ -143,15 +157,25 @@ struct CourseRoundImageRow: View {
                     Text(String(repeating: "€", count: course.priceLevel))
                         .font(.subheadline)
                         .foregroundColor(.gray)
+                    
                     if course.featured {
                         Image(systemName: "star.fill")
                             .font(.subheadline)
                             .foregroundColor(.yellow)
+                    } else {
+                        Image(systemName: "star.fill")
+                        .font(.subheadline)
+                        .foregroundColor(Color(red:0.93, green:0.93,blue:0.93))
                     }
+
                     if course.purchased {
                         Image(systemName: "checkmark.circle.fill")
                             .font(.subheadline)
                             .foregroundColor(.green)
+                    } else {
+                        Image(systemName: "checkmark.circle.fill")
+                        .font(.subheadline)
+                        .foregroundColor(Color(red:0.93, green:0.93,blue:0.93))
                     }
                    
                 }
